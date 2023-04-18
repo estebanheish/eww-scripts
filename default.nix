@@ -3,7 +3,6 @@
   pkg-config,
   alsa-lib,
   alsa-utils,
-  alsa-tools,
 }:
 rustPlatform.buildRustPackage rec {
   pname = "eww-scripts";
