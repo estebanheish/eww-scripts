@@ -14,6 +14,7 @@ fn main() {
     let mut socket = BufReader::new(socket).lines();
 
     let (mut workspaces, mut focused) = init();
+    let mut screencast = false;
 
     while let Some(Ok(line)) = socket.next() {
         let (event, arg) = line.split_once(">>").unwrap();
@@ -25,15 +26,20 @@ fn main() {
                 let (_, f) = arg.split_once(",").unwrap();
                 focused = f.parse().unwrap();
             }
+            "screencast" => match arg {
+                "1,0" => screencast = true,
+                "0,0" => screencast = false,
+                _ => continue,
+            },
             _ => continue,
         }
-        spit(workspaces, focused);
+        spit(workspaces, focused, screencast);
     }
 }
 
 fn init() -> (Ws, u32) {
     let mut workspaces: Ws = [false; 15];
-    for _ in 0..30 {
+    for _ in 0..1200 {
         match (get_focused(), get_workspaces()) {
             (Some(focused), Some(vws)) => {
                 vws.iter().for_each(|w| workspaces[*w] = true);
@@ -45,9 +51,9 @@ fn init() -> (Ws, u32) {
     panic!("can't get initial values");
 }
 
-fn spit(ws: Ws, f: u32) {
+fn spit(ws: Ws, f: u32, s: bool) {
     let mut out = String::new();
-    out.push('[');
+    out.push_str(&format!(r#"{{ "screencast": {}, "workspaces": ["#, s));
     for (i, w) in ws.iter().enumerate() {
         if *w {
             out.push_str(&format!(
@@ -59,7 +65,7 @@ fn spit(ws: Ws, f: u32) {
         }
     }
     out.pop();
-    out.push(']');
+    out.push_str("]}");
     println!("{}", out);
 }
 
