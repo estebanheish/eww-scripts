@@ -81,7 +81,8 @@ fn get_workspaces() -> Option<Vec<usize>> {
         .ok()?
         .split("ID ")
         .skip(1)
-        .map(|t| t.split(" ").next().unwrap().parse().unwrap())
+        .map(|t| t.split(" ").next().unwrap().parse())
+        .flatten()
         .collect(),
     )
 }
