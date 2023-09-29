@@ -24,6 +24,11 @@
     devShells = forAllSystems ({pkgs}: {
       default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          cargo 
+          rustc
+          rust-analyzer
+          rustfmt
+          clippy
           pkg-config
           alsa-lib
           alsa-utils
