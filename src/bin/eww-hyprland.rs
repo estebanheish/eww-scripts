@@ -31,7 +31,7 @@ where
 
 #[derive(Serialize, Copy, Clone)]
 struct Workspace {
-    id: i32,
+    id: usize,
     focused: bool,
     alive: bool,
 }
@@ -58,7 +58,7 @@ impl Hyprland {
             focused: false,
             alive: false,
         }; 15];
-        (0..15).for_each(|i| ws[i].id = i as i32);
+        (0..15).for_each(|i| ws[i].id = i);
         Self {
             ws,
             focused_ws: 0,
